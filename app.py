@@ -6,47 +6,104 @@ from googletrans import Translator
 from streamlit_lottie import st_lottie
 import json
 
-st.title('Análisis de Sentimiento')
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&display=swap');
+
+.stApp {
+    background-color: #FFFDF6;
+    background-image:
+        linear-gradient(90deg, transparent 68px, #E8B4B8 68px, #E8B4B8 70px, transparent 70px),
+        repeating-linear-gradient(180deg, transparent 0px, transparent 33px, #CFE0E8 33px, #CFE0E8 34px);
+    background-size: 100% 100%, 100% 34px;
+}
+
+h1, h2, h3 {
+    font-family: 'Caveat', cursive !important;
+    color: #4A3F35 !important;
+    font-size: 2.4rem !important;
+}
+h2 { font-size: 1.7rem !important; }
+h3 { font-size: 1.4rem !important; }
+
+p, li, label, div[data-testid="stMarkdownContainer"], .stMarkdown {
+    font-family: 'Patrick Hand', cursive !important;
+    font-size: 1.2rem !important;
+    color: #4A3F35 !important;
+}
+
+section[data-testid="stSidebar"] {
+    background-color: #FBF3E7;
+    border-right: 2px dashed #D9BFA9;
+}
+
+div[data-testid="stImage"] img {
+    border-radius: 10px;
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.15);
+    transform: rotate(-1deg);
+}
+
+div[data-testid="stExpander"] {
+    background-color: #FFFBF0;
+    border: 1.5px solid #D9BFA9 !important;
+    border-radius: 10px;
+}
+
+input, .stTextInput input {
+    font-family: 'Patrick Hand', cursive !important;
+    font-size: 1.2rem !important;
+    background-color: transparent !important;
+    border: none !important;
+    border-bottom: 2px solid #A9CBA4 !important;
+    border-radius: 0 !important;
+    color: #4A3F35 !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.title('Mi Diario de Reflexión')
 image = Image.open('emoticones.jpg')
 st.image(image)
-st.subheader("Por favor escribe en el campo de texto la frase que deseas analizar")
+st.subheader("Escribe cómo te fue hoy o cómo te sientes sobre algo, y descubre el tono de tus palabras")
 
 translator = Translator()
 
 with st.sidebar:
-               st.subheader("Polaridad y Subjetividad")
+               st.subheader("¿Qué significan estos números?")
                ("""
-                Polaridad: Indica si el sentimiento expresado en el texto es positivo, negativo o neutral. 
-                Su valor oscila entre -1 (muy negativo) y 1 (muy positivo), con 0 representando un sentimiento neutral.
-                
-               Subjetividad: Mide cuánto del contenido es subjetivo (opiniones, emociones, creencias) frente a objetivo
-               (hechos). Va de 0 a 1, donde 0 es completamente objetivo y 1 es completamente subjetivo.
+                Polaridad: indica si el tono de lo que escribiste es positivo, negativo o neutral.
+                Va de -1 (muy negativo) a 1 (muy positivo), con 0 como neutral.
+
+                Subjetividad: mide qué tanto de tu texto son opiniones o emociones frente a hechos objetivos.
+                Va de 0 (objetivo) a 1 (subjetivo).
+
+                Nota: esto analiza el texto, no te diagnostica. Es una guía de reflexión, no un reemplazo de apoyo profesional si lo necesitas.
 
                  """
                ) 
 
-with st.expander('Analizar texto'):
-    text = st.text_input('Escribe por favor: ')
+with st.expander('Escribir una entrada'):
+    text = st.text_input('¿Cómo te sientes hoy? ')
     if text:
 
         translation = translator.translate(text, src="es", dest="en")
         trans_text = translation.text
         blob = TextBlob(trans_text)
-        st.write('Polarity: ', round(blob.sentiment.polarity,2))
-        st.write('Subjectivity: ', round(blob.sentiment.subjectivity,2))
+        st.write('Polaridad: ', round(blob.sentiment.polarity,2))
+        st.write('Subjetividad: ', round(blob.sentiment.subjectivity,2))
         x=round(blob.sentiment.polarity,2)
-        if x > 0.0 and x <=1.0:
-            st.write( 'Es un sentimiento Positivo 😊')
+        if x > 0.0:
+            st.write( 'Tu entrada suena positiva 😊')
             with open ('happyP.json') as source:
               animation = json.load (source)
             st.lottie(animation, width=350)
-        elif x >=-1 and x <= 0:
-            st.write( 'Es un sentimiento Negativo 😔')
+        elif x < 0.0:
+            st.write( 'Tu entrada suena negativa 😔')
             with open ('sadM.json') as source:
               animation = json.load (source)
             st.lottie(animation, width=350)          
         else:
-            st.write( 'Es un sentimiento Neutral 😐')
+            st.write( 'Tu entrada suena neutral 😐')
             with open ('NeutralE.json') as source:
               animation = json.load (source)
-            st.lottie(animation, width=350) 
+            st.lottie(animation, width=350)
