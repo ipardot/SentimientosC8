@@ -68,7 +68,7 @@ input, .stTextInput input {
 """, unsafe_allow_html=True)
 
 st.title('Mi Diario de Reflexión')
-image = Image.open('emoticones.jpg')
+image = Image.open('emoticones.png')
 st.image(image)
 st.subheader("Escribe cómo te fue hoy o cómo te sientes sobre algo, y descubre el tono de tus palabras")
 
