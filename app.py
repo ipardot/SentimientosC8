@@ -49,6 +49,12 @@ div[data-testid="stExpander"] {
     border-radius: 10px;
 }
 
+div[data-testid="stAlert"] {
+    font-family: 'Patrick Hand', cursive !important;
+    background-color: #FBF3E7 !important;
+    border-left: 4px solid #A9CBA4 !important;
+}
+
 input, .stTextInput input {
     font-family: 'Patrick Hand', cursive !important;
     font-size: 1.2rem !important;
@@ -66,6 +72,12 @@ image = Image.open('emoticones.jpg')
 st.image(image)
 st.subheader("Escribe cómo te fue hoy o cómo te sientes sobre algo, y descubre el tono de tus palabras")
 
+st.info(
+    "ℹ️ Esto analiza el texto que escribes con procesamiento de lenguaje natural (polaridad y subjetividad), "
+    "no interpreta cómo te sientes realmente. Es una guía de reflexión, no un diagnóstico ni una herramienta "
+    "clínica, y no reemplaza el acompañamiento de un profesional de salud mental."
+)
+
 translator = Translator()
 
 with st.sidebar:
@@ -76,8 +88,6 @@ with st.sidebar:
 
                 Subjetividad: mide qué tanto de tu texto son opiniones o emociones frente a hechos objetivos.
                 Va de 0 (objetivo) a 1 (subjetivo).
-
-                Nota: esto analiza el texto, no te diagnostica. Es una guía de reflexión, no un reemplazo de apoyo profesional si lo necesitas.
 
                  """
                ) 
